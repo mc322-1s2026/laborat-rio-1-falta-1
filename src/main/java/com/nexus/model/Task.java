@@ -15,12 +15,14 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
+    private estimatedEffort
 
-    public Task(String title, LocalDate deadline) {
+    public Task(String title, LocalDate deadline, double estimatedEffort) {
         this.id = nextId++;
         this.deadline = deadline;
         this.title = title;
         this.status = TaskStatus.TO_DO;
+        this.estimatedEffort = estimatedEffort;
         
         // Ação do Aluno:
         totalTasksCreated++; 
@@ -57,4 +59,5 @@ public class Task {
     public String getTitle() { return title; }
     public LocalDate getDeadline() { return deadline; }
     public User getOwner() { return owner; }
+    public User getEstimatedEffort() { return estimatedEffort; }
 }
