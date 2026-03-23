@@ -1,5 +1,6 @@
 package com.nexus.service;
 
+import com.nexus.model.Task;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
