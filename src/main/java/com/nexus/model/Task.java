@@ -21,6 +21,7 @@ public class Task {
     private String title;
     private TaskStatus status;
     private User owner;
+    private double estimatedEffort;
 
     /**
      * Cria uma nova tarefa com o título e prazo fornecidos, inicializando seu status como TO_DO.
@@ -29,7 +30,7 @@ public class Task {
      * @param deadline O prazo da tarefa (não pode ser nulo).
      * @throws IllegalArgumentException Se o título for vazio ou o prazo for nulo.
      */
-    public Task(String title, LocalDate deadline) {
+    public Task(String title, LocalDate deadline, double estimatedEffort) {
         if (title == null || title.isBlank()) {
             totalValidationErrors++;
             throw new IllegalArgumentException("Título da tarefa não pode ser vazio.");
@@ -42,6 +43,7 @@ public class Task {
         this.deadline = deadline;
         this.title = title;
         this.status = TaskStatus.TO_DO;
+        this.estimatedEffort = estimatedEffort.
         
         totalTasksCreated++; 
     }
@@ -141,4 +143,10 @@ public class Task {
      * @return O usuário dono da tarefa.
      */
     public User getOwner() { return owner; }
+
+    /**
+     * Obtém o trabalho estimado da tarefa.
+     * @return O trabalho da tarefa.
+     */
+    public User getEstimatedEffort() { return estimatedEffort; }
 }
