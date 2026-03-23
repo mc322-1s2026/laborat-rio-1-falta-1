@@ -1,4 +1,4 @@
-package com.nexus.model;
+package com.nexus.service;
 
 import java.util.Comparator;
 import java.util.List;
