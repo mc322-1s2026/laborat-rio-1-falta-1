@@ -7,7 +7,34 @@ import java.util.stream.Collectors;
 
 public class Workspace {
     private List<User> usuarios;
+    private List<Project> projetos;
     private List<Task> todasAsTarefas;
+
+
+    public void addProject(Project p) {
+        if (p == null) {
+            throw new NexusValidationException("Projeto inválido.");
+        }
+        this.projetos.add(p);
+    }
+
+    public Project getProjectByName(String nome) {
+        return projetos.stream()
+            .filter(p -> p.getNome().equalsIgnoreCase(nome))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Projeto não encontrado: " + nome));
+    }
+
+    public Task getTaskById(String id) {
+        return todasAsTarefas.stream()
+            .filter(t -> t.getId().equals(id))
+            .findFirst()
+            .orElseThrow(() -> new NexusValidationException("Tarefa não encontrada: " + id));
+    }
+
+    public void addTask(Task t) {
+        this.todasAsTarefas.add(t);
+    }
 
     // 1. Top Performers: Os 3 usuários com mais tarefas DONE
     public List<User> getTopPerformers() {

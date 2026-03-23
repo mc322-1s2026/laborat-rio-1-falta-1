@@ -23,4 +23,32 @@ public class User {
     public long calculateWorkload() {
         return 0; 
     }
+
+    /**
+     * Retorna a lista de tarefas pertencentes ao usuário com um status especificado.
+     * Para garantir o encapsulamento e evitar vazamento de referência, retorna uma exibição 
+     * imutável (unmodifiableList) da lista original.
+     * @return Uma lista imutável contendo as tarefas do usuário com um status especificado.
+     */
+    public List<Task> getTasksByStatus(TaskStatus status) {
+        List<Task> filtered = myTasks.stream()
+                .filter(t -> t.getStatus() == status)
+                .collect(Collectors.toList());
+
+        return Collections.unmodifiableList(filtered);
+    }
+
+    /**
+     * Retorna a lista de tarefas pertencentes ao usuário com um status especificado.
+     * Para garantir o encapsulamento e evitar vazamento de referência, retorna uma exibição 
+     * imutável (unmodifiableList) da lista original.
+     * @return Uma lista imutável contendo as tarefas do usuário com um status especificado.
+     */
+    public List<Task> getTasksByStatus(TaskStatus status) {
+        List<Task> filtered = myTasks.stream()
+                .filter(t -> t.getStatus() == status)
+                .collect(Collectors.toList());
+
+        return Collections.unmodifiableList(filtered);
+    }
 }
