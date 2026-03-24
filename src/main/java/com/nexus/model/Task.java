@@ -147,4 +147,12 @@ public class Task {
      * @return O trabalho da tarefa.
      */
     public double getEstimatedEffort() { return estimatedEffort; }
+
+    /**
+     * Define o proprietário da tarefa.
+     * @param owner O usuário proprietário.
+     */
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }
