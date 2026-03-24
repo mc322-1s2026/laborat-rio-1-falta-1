@@ -108,7 +108,7 @@ public class Main {
             System.out.print("Prazo (AAAA-MM-DD): ");
             LocalDate deadline = LocalDate.parse(scanner.nextLine());
 
-            Task newTask = new Task(title, deadline);
+            Task newTask = new Task(title, deadline, 0.0);
             workspace.addTask(newTask);
             System.out.println("[OK] Tarefa adicionada ao backlog.");
         } catch (DateTimeParseException e) {

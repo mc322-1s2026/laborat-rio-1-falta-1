@@ -37,6 +37,9 @@ public class Task {
         if (deadline == null) {
             throw new IllegalArgumentException("Deadline é obrigatório.");
         }
+        if (estimatedEffort < 0) {
+            throw new IllegalArgumentException("Esforço estimado não pode ser negativo.");
+        }
         this.id = nextId++;
         this.deadline = deadline;
         this.title = title;
@@ -44,6 +47,15 @@ public class Task {
         this.estimatedEffort = estimatedEffort;
         
         totalTasksCreated++; 
+    }
+
+    /**
+     * Construtor de conveniência com esforço padrão de 0 horas.
+     * @param title O título da tarefa.
+     * @param deadline O prazo da tarefa.
+     */
+    public Task(String title, LocalDate deadline) {
+        this(title, deadline, 0.0);
     }
 
     /**

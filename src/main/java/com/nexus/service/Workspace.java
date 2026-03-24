@@ -173,3 +173,23 @@ public class Workspace {
                 (existing, replacement) -> existing // em caso de conflito, mantém o existente
             ));
     }
+
+    /**
+     * Retorna uma cópia imutável de todas as tarefas do workspace.
+     * @return Lista imutável de tarefas globais.
+     */
+    public List<Task> getTasks() {
+        return List.copyOf(allTasks);
+    }
+
+    /**
+     * Retorna lista de tarefas filtradas por status.
+     * Utilizado principalmente para relatórios ou validações.
+     * @param status Status desejado.
+     * @return Lista imutável de tarefas com o status informado.
+     */
+    public List<Task> getTasksByStatus(TaskStatus status) {
+        return allTasks.stream()
+            .filter(t -> t.getStatus() == status)
+            .collect(Collectors.toUnmodifiableList());
+    }
