@@ -41,7 +41,7 @@ public class Task {
         this.deadline = deadline;
         this.title = title;
         this.status = TaskStatus.TO_DO;
-        this.estimatedEffort = estimatedEffort.
+        this.estimatedEffort = estimatedEffort;
         
         totalTasksCreated++; 
     }
@@ -154,5 +154,48 @@ public class Task {
      */
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    /**
+     * Realiza a transição de status da tarefa conforme as regras de máquina de estados.
+     * Valida todas as regras de negócio antes de alterar o status.
+     * Regras: não pode ir de BLOCKED para DONE, não pode ir para IN_PROGRESS sem dono,
+     * não pode bloquear uma tarefa já DONE.
+     * 
+     * @param newStatus O novo status para a tarefa.
+     * @throws NexusValidationException Se a transição violar as regras de negócio.
+     * @throws IllegalArgumentException Se o novo status for nulo.
+     */
+    public void transitionTo(TaskStatus newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("O novo status não pode ser nulo.");
+        }
+
+        // Regra: não pode ir de qualquer estado para DONE se está BLOCKED
+        if (newStatus == TaskStatus.DONE && this.status == TaskStatus.BLOCKED) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Impossível finalizar tarefa bloqueada.");
+        }
+
+        // Regra: não pode ir para IN_PROGRESS sem dono
+        if (newStatus == TaskStatus.IN_PROGRESS && this.owner == null) {
+            totalValidationErrors++;
+            throw new NexusValidationException("NexusValidationException: Owner obrigatório para iniciar a tarefa.");
+        }
+
+        // Regra: não pode bloquear uma tarefa já DONE
+        if (newStatus == TaskStatus.BLOCKED && this.status == TaskStatus.DONE) {
+            totalValidationErrors++;
+            throw new NexusValidationException("Tarefa finalizada não pode ser bloqueada.");
+        }
+
+        // Atualizar carga de trabalho ativa se mudando de/para IN_PROGRESS
+        if (this.status == TaskStatus.IN_PROGRESS && newStatus != TaskStatus.IN_PROGRESS) {
+            activeWorkload--;
+        } else if (this.status != TaskStatus.IN_PROGRESS && newStatus == TaskStatus.IN_PROGRESS) {
+            activeWorkload++;
+        }
+
+        this.status = newStatus;
     }
 }

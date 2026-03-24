@@ -3,6 +3,7 @@ package com.nexus.model;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Representa um usuário dentro do sistema Nexus.
@@ -33,19 +34,19 @@ public class User {
     }
 
     /**
-     * Obtém o endereço de e-mail do usuário.
-     * @return O e-mail cadastrado.
-     */
-    public String consultEmail() {
-        return email;
-    }
-
-    /**
      * Obtém o nome de usuário (username).
      * @return O username cadastrado.
      */
-    public String consultUsername() {
+    public String getUsername() {
         return username;
+    }
+
+    /**
+     * Obtém o endereço de e-mail do usuário.
+     * @return O e-mail cadastrado.
+     */
+    public String getEmail() {
+        return email;
     }
 
     /**

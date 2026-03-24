@@ -7,9 +7,40 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+/**
+ * Processa um arquivo de log contendo comandos para manipulação do sistema Nexus.
+ * Este processador interpreta linhas de comando no formato: COMANDO;PARAMETRO1;PARAMETRO2...
+ * 
+ * Suporta os seguintes comandos:
+ * - CREATE_USER;username;email: Cria um novo usuário (com validação de e-mail)
+ * - CREATE_PROJECT;projectName;budgetHours: Cria um novo projeto
+ * - CREATE_TASK;taskName;deadline;effort;projectName: Cria uma tarefa vinculada a um projeto
+ * - ASSIGN_USER;taskId;username: Atribui uma tarefa a um usuário
+ * - CHANGE_STATUS;taskId;newStatus: Altera o status de uma tarefa (TO_DO, IN_PROGRESS, BLOCKED, DONE)
+ * - REPORT_STATUS: Imprime os relatórios analíticos com Streams
+ * 
+ * Este processador adota a filosofia Fail-Fast: quando uma regra de negócio é violada,
+ * uma NexusValidationException é lançada. O processador captura essas exceções,
+ * incrementa o contador global de erros e continua processando as próximas linhas.
+ * 
+ * @author Sistema Nexus
+ */
 public class LogProcessor {
 
+    /**
+     * Processa um arquivo de log linha por linha, executando os comandos especificados.
+     * 
+     * O método lê o arquivo do classpath, ignora linhas em branco ou comentadas (prefixo #),
+     * e executa cada comando conforme especificado. Em caso de erro, a exceção é capturada
+     * e o processamento continua com a próxima linha.
+     * 
+     * @param fileName O nome do arquivo de log no classpath (ex: log_v1.txt).
+     * @param workspace O workspace onde os dados serão inseridos.
+     * @param users A lista global de usuários (sincronizada com workspace).
+     * @throws IOException Se o arquivo não for encontrado ou houver erro ao ler.
+     */
     public void processLog(String fileName, Workspace workspace, List<User> users) {
         try {
             InputStream resource = getClass().getClassLoader().getResourceAsStream(fileName);
@@ -69,8 +100,10 @@ public class LogProcessor {
                             default -> System.err.println("[WARN] Ação desconhecida: " + action);
                         }
                     } catch (NexusValidationException e) {
+                        Task.totalValidationErrors++;
                         System.err.println("[ERRO DE REGRAS] Falha no comando '" + line + "': " + e.getMessage());
                     } catch (Exception e) {
+                        Task.totalValidationErrors++;
                         System.err.println("[ERRO TÉCNICO] Erro ao processar linha '" + line + "': " + e.getMessage());
                     }
                 }
@@ -80,10 +113,21 @@ public class LogProcessor {
         }
     }
 
+    /**
+     * Imprime todos os relatórios analíticos gerados com Stream API.
+     * Exibe os 4 relatórios exigidos: Top Performers, Usuários Sobrecarregados,
+     * Saúde dos Projetos e Gargalo Global do Sistema.
+     * 
+     * @param ws O workspace contendo os dados para análise.
+     */
     private void printAnalytics(Workspace ws) {
-        System.out.println("\n=== RELATÓRIO ANALÍTICO NEXUS ===");
-        System.out.println("Top Performers: " + ws.getTopPerformers());
+        System.out.println("\n=== RELATORIOS ANALITICOS ===");
+        System.out.println("Top Performers: " + ws.getTopPerformers().stream()
+            .map(User::getUsername).collect(Collectors.toList()));
+        System.out.println("Usuarios Sobrecarregados: " + ws.getOverloadedUsers().stream()
+            .map(User::getUsername).collect(Collectors.toList()));
+        System.out.println("Saude dos Projetos: " + ws.getProjectHealthReport());
         System.out.println("Gargalo do Sistema: " + ws.getGlobalBottleneck());
-        System.out.println("=================================\n");
+        System.out.println("===========================\n");
     }
 }
