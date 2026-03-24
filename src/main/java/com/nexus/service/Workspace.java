@@ -109,7 +109,7 @@ public class Workspace {
      */
     public List<User> getTopPerformers() {
         return Collections.unmodifiableList(users.stream()
-            .sorted(Comparator.comparingLong(u -> u.getTasksByStatus(TaskStatus.DONE).size()).reversed())
+            .sorted(Comparator.comparingInt((User u) -> u.getTasksByStatus(TaskStatus.DONE).size()).reversed())
             .limit(3)
             .collect(Collectors.toList()));
     }
