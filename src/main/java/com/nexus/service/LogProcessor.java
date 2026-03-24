@@ -32,7 +32,9 @@ public class LogProcessor {
                         switch (action) {
                             case "CREATE_USER" -> {
                                 // CREATE_USER;username;email
-                                users.add(new User(p[1], p[2]));
+                                User newUser = new User(p[1], p[2]);
+                                users.add(newUser);
+                                workspace.addUser(newUser);
                                 System.out.println("[LOG] Usuário criado: " + p[1]);
                             }
                             case "CREATE_PROJECT" -> {
@@ -50,17 +52,14 @@ public class LogProcessor {
                             }
                             case "ASSIGN_USER" -> {
                                 // ASSIGN_USER;taskId;username
-                                Task task = workspace.getTaskById(p[1]);
-                                User user = users.stream()
-                                    .filter(u -> u.getUsername().equals(p[2]))
-                                    .findFirst()
-                                    .orElseThrow(() -> new NexusValidationException("Usuário não encontrado: " + p[2]));
+                                Task task = workspace.getTaskById(Integer.parseInt(p[1]));
+                                User user = workspace.getUserByUsername(p[2]);
                                 task.setOwner(user);
                                 System.out.println("[LOG] Tarefa " + p[1] + " atribuída a " + p[2]);
                             }
                             case "CHANGE_STATUS" -> {
                                 // CHANGE_STATUS;taskId;newStatus
-                                Task task = workspace.getTaskById(p[1]);
+                                Task task = workspace.getTaskById(Integer.parseInt(p[1]));
                                 task.transitionTo(TaskStatus.valueOf(p[2]));
                                 System.out.println("[LOG] Status da tarefa " + p[1] + " alterado para " + p[2]);
                             }
