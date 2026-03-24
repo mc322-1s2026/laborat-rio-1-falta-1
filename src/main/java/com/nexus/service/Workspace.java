@@ -23,7 +23,7 @@ public class Workspace {
 
     public Project getProjectByName(String nome) {
         return projetos.stream()
-            .filter(p -> p.getNome().equalsIgnoreCase(nome))
+            .filter(p -> p.getName().equalsIgnoreCase(nome))
             .findFirst()
             .orElseThrow(() -> new NexusValidationException("Projeto não encontrado: " + nome));
     }
@@ -56,14 +56,14 @@ public class Workspace {
 
     // 3. Project Health: Percentual de conclusão (0.0 a 100.0)
     public double getProjectHealth(Project p) {
-        List<Task> tarefasDoProjeto = p.getTarefas();
-        if (tarefasDoProjeto.isEmpty()) return 0.0;
+        List<Task> projectTasks = p.getTasks();
+        if (projectTasks.isEmpty()) return 0.0;
 
-        long concluidas = tarefasDoProjeto.stream()
+        long concluidas = projectTasks.stream()
             .filter(t -> t.getStatus() == TaskStatus.DONE)
             .count();
 
-        return (double) concluidas / tarefasDoProjeto.size() * 100.0;
+        return (double) concluidas / projectTasks.size() * 100.0;
     }
 
     // 4. Global Bottlenecks: O status com mais tarefas (exceto DONE)

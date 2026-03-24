@@ -32,11 +32,9 @@ public class Task {
      */
     public Task(String title, LocalDate deadline, double estimatedEffort) {
         if (title == null || title.isBlank()) {
-            totalValidationErrors++;
             throw new IllegalArgumentException("Título da tarefa não pode ser vazio.");
         }
         if (deadline == null) {
-            totalValidationErrors++;
             throw new IllegalArgumentException("Deadline é obrigatório.");
         }
         this.id = nextId++;
@@ -148,5 +146,5 @@ public class Task {
      * Obtém o trabalho estimado da tarefa.
      * @return O trabalho da tarefa.
      */
-    public User getEstimatedEffort() { return estimatedEffort; }
+    public double getEstimatedEffort() { return estimatedEffort; }
 }
