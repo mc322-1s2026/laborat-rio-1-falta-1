@@ -126,7 +126,9 @@ public class LogProcessor {
             .map(User::getUsername).collect(Collectors.toList()));
         System.out.println("Usuarios Sobrecarregados: " + ws.getOverloadedUsers().stream()
             .map(User::getUsername).collect(Collectors.toList()));
-        System.out.println("Saude dos Projetos: " + ws.getProjectHealthReport());
+        System.out.println("Saude dos Projetos: " + ws.getProjectHealthReport().entrySet().stream()
+            .map(e -> e.getKey() + "=" + String.format("%.1f%%", e.getValue()))
+            .collect(Collectors.joining(", ", "{", "}")));
         System.out.println("Gargalo do Sistema: " + ws.getGlobalBottleneck());
         System.out.println("===========================\n");
     }
